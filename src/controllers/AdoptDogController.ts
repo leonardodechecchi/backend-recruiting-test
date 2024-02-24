@@ -11,9 +11,23 @@ class AdoptDogController extends BaseController {
   protected async executeImpl(request: Request, response: Response): Promise<void> {
     const { id } = request.params;
 
-    await this.dogRepository.updateOne(new ObjectId(id), { status: 'adopted' });
+    const dogId = new ObjectId(id);
+    const dog = await this.dogRepository.getById(dogId);
 
-    this.ok(response);
+    if (!dog) {
+      return this.notFound(response);
+    }
+
+    if (dog.status === 'adopted') {
+      return this.unauthorized(response, 'The dog has already been adopted');
+    }
+
+    await this.dogRepository.updateOne(dogId, {
+      status: 'adopted',
+      adoptionDate: new Date(),
+    });
+
+    return this.ok(response);
   }
 }
 

@@ -5,8 +5,8 @@ class Dog {
     public name: string,
     public breed: string,
     public age: number,
-    public status: 'available' | 'adopted' | 'in-custody',
-    public adoptionDate: Date,
+    public status: 'available' | 'adopted' | 'in-custody' = 'available',
+    public adoptionDate?: Date,
     public id?: ObjectId
   ) {}
 }
