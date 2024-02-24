@@ -2,6 +2,7 @@ import { config } from 'dotenv';
 import express from 'express';
 import http from 'http';
 import { MongoClient } from 'mongodb';
+import { dogRouter } from './routes';
 
 const result = config();
 if (result.error) {
@@ -12,6 +13,8 @@ const app = express();
 const httpPort = process.env.HTTP_PORT!;
 
 app.use(express.json());
+
+app.use('/api', dogRouter);
 
 const dbClient = new MongoClient(process.env.DB_CONN_STRING as string);
 

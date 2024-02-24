@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import { BaseController } from './BaseController';
 import { IDogRepository } from '../repositories/DogRepository';
-import { Dog } from '../models/Dog';
 import { ObjectId } from 'mongodb';
 
-class GetDogByIdController extends BaseController {
+class AdoptDogController extends BaseController {
   constructor(private dogRepository: IDogRepository) {
     super();
   }
@@ -12,15 +11,10 @@ class GetDogByIdController extends BaseController {
   protected async executeImpl(request: Request, response: Response): Promise<void> {
     const { id } = request.params;
 
-    const dog = await this.dogRepository.getById(new ObjectId(id));
+    await this.dogRepository.updateOne(new ObjectId(id), { status: 'adopted' });
 
-    if (!dog) {
-      this.notFound(response);
-      return;
-    }
-
-    this.ok<Dog>(response, dog);
+    this.ok(response);
   }
 }
 
-export { GetDogByIdController };
+export { AdoptDogController };

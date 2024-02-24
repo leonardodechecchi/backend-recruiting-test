@@ -5,7 +5,7 @@ interface IDogRepository {
   getAll(): Promise<Dog[]>;
   getById(id: ObjectId): Promise<Dog | null>;
   insertOne(dog: Dog): Promise<void>;
-  updateOne(dog: Partial<Dog>): Promise<void>;
+  updateOne(id: ObjectId, dog: Partial<Dog>): Promise<void>;
 }
 
 class DogRepository implements IDogRepository {
@@ -23,7 +23,7 @@ class DogRepository implements IDogRepository {
     throw new Error('Method not implemented.');
   }
 
-  public async updateOne(dog: Partial<Dog>): Promise<void> {
+  public async updateOne(id: ObjectId, updatedDog: Partial<Dog>): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }
