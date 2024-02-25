@@ -18,7 +18,7 @@ abstract class BaseController {
       response.type('application/json');
       response.status(200).json(dto);
     } else {
-      response.status(200);
+      response.sendStatus(200);
     }
   }
 

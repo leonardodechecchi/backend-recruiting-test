@@ -10,16 +10,14 @@ class GetDogByIdController extends BaseController {
   }
 
   protected async executeImpl(request: Request, response: Response): Promise<void> {
-    const { id } = request.params;
-
-    const dog = await this.dogRepository.getById(new ObjectId(id));
+    const dogId = new ObjectId(request.params.id);
+    const dog = await this.dogRepository.getById(dogId);
 
     if (!dog) {
-      this.notFound(response);
-      return;
+      return this.notFound(response);
     }
 
-    this.ok<Dog>(response, dog);
+    return this.ok<Dog>(response, dog);
   }
 }
 

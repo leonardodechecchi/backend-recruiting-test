@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb';
+import { Collection, Db, ObjectId } from 'mongodb';
 import { Dog } from '../models/Dog';
 
 interface IDogRepository {
@@ -9,22 +9,26 @@ interface IDogRepository {
 }
 
 class DogRepository implements IDogRepository {
-  constructor() {}
+  private collection: Collection<Dog>;
+
+  constructor(db: Db) {
+    this.collection = db.collection('dogs');
+  }
 
   public async getAll(): Promise<Dog[]> {
-    throw new Error('Method not implemented.');
+    return this.collection.find().toArray();
   }
 
   public async getById(id: ObjectId): Promise<Dog | null> {
-    throw new Error('Method not implemented.');
+    return this.collection.findOne({ _id: id });
   }
 
   public async insertOne(dog: Dog): Promise<void> {
-    throw new Error('Method not implemented.');
+    await this.collection.insertOne(dog);
   }
 
   public async updateOne(id: ObjectId, updatedDog: Partial<Dog>): Promise<void> {
-    throw new Error('Method not implemented.');
+    await this.collection.updateOne({ _id: id }, updatedDog);
   }
 }
 

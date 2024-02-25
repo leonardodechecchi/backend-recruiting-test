@@ -2,16 +2,18 @@ import { Request, Response } from 'express';
 import { BaseController } from './BaseController';
 import { IDogRepository } from '../repositories/DogRepository';
 import { ObjectId } from 'mongodb';
+import { ICacheService } from '../utils/CacheService';
 
 class AdoptDogController extends BaseController {
-  constructor(private dogRepository: IDogRepository) {
+  constructor(
+    private dogRepository: IDogRepository,
+    private cacheService: ICacheService
+  ) {
     super();
   }
 
   protected async executeImpl(request: Request, response: Response): Promise<void> {
-    const { id } = request.params;
-
-    const dogId = new ObjectId(id);
+    const dogId = new ObjectId(request.params.id);
     const dog = await this.dogRepository.getById(dogId);
 
     if (!dog) {
@@ -26,6 +28,8 @@ class AdoptDogController extends BaseController {
       status: 'adopted',
       adoptionDate: new Date(),
     });
+
+    this.cacheService.purge();
 
     return this.ok(response);
   }

@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
+import { RequestHandler } from 'express';
 import { ObjectId } from 'mongodb';
 import { Dog } from '../models/Dog';
 
@@ -6,7 +6,7 @@ class Middleware {
   constructor() {}
 
   public static checkObjectIdValidity(): RequestHandler {
-    return (request: Request, response: Response, next: NextFunction) => {
+    return (request, response, next) => {
       if (
         !(
           request.params &&
@@ -15,16 +15,15 @@ class Middleware {
           ObjectId.isValid(request.params.id)
         )
       ) {
-        response.status(400).json({ message: 'Invalid id' });
-        return;
+        return response.status(400).json({ message: 'Invalid id' });
       }
 
-      next();
+      return next();
     };
   }
 
   public static checkDogValidity(): RequestHandler {
-    return (request: Request, response: Response, next: NextFunction) => {
+    return (request, response, next) => {
       const dog = request.body as Dog;
 
       if (
@@ -36,11 +35,10 @@ class Middleware {
         !['available', 'adopted', 'in-custody'].includes(dog.status) ||
         !(dog.adoptionDate instanceof Date)
       ) {
-        response.status(400).json({ message: 'Invalid dog data' });
-        return;
+        return response.status(400).json({ message: 'Invalid dog data' });
       }
 
-      next();
+      return next();
     };
   }
 }
