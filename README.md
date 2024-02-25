@@ -11,7 +11,21 @@ Questo progetto implementa una REST API per la gestione di un canile virtuale, c
 | PUT     | api/dogs/custody     | Aggiunge un cane in custodia              |
 | DELETE  | api/dogs/custody/:id | Rimuove un cane dalla custodia            |
 
-## Istruzioni per il setup del progetto
+## Setup del progetto
+
+### Configurazione del file .env
+
+Il progetto utilizza un file `.env` per gestire le variabili d'ambiente. Prima di avviare l'applicazione, è necessario creare un file `.env` nella radice del progetto e configurare le seguenti variabili:
+
+```
+DB_CONN_STRING="" # Stringa di connessione al database
+DB_NAME=""        # Nome del database
+HTTP_PORT=        # Porta HTTP
+```
+
+### Installazione delle dipendenze
+
+Per installare le dipendenze, eseguire il seguente comando da terminale:
 
 ```
 npm install
