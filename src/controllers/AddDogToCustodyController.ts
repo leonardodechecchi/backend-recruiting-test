@@ -11,8 +11,7 @@ class AddDogToCustodyController extends BaseController {
   protected async executeImpl(request: Request, response: Response): Promise<void> {
     const { name, breed, age } = request.body as Dog;
 
-    const dog = new Dog(name, breed, age, 'in-custody');
-    await this.dogRepository.insertOne(dog);
+    await this.dogRepository.insertOne({ name, breed, age, status: 'in-custody' });
 
     return this.ok(response);
   }

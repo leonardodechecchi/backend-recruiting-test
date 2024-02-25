@@ -13,7 +13,6 @@ class MockDogRepository implements IDogRepository {
         breed: 'West Highland White Terrier',
         age: 17,
         status: 'available',
-        adoptionDate: new Date(),
       },
       {
         id: new ObjectId(),
@@ -36,7 +35,7 @@ class MockDogRepository implements IDogRepository {
   }
 
   public async insertOne(dog: Dog): Promise<void> {
-    this.dogs.push(dog);
+    this.dogs.push({ id: new ObjectId(), ...dog });
   }
 
   public async updateOne(id: ObjectId, updatedDog: Partial<Dog>): Promise<void> {
@@ -44,6 +43,14 @@ class MockDogRepository implements IDogRepository {
 
     if (index !== -1) {
       this.dogs[index] = { ...this.dogs[index], ...updatedDog };
+    }
+  }
+
+  public async deleteOne(id: ObjectId): Promise<void> {
+    const index = this.dogs.findIndex((dog) => dog.id?.equals(id));
+
+    if (index !== -1) {
+      this.dogs.splice(index, 1);
     }
   }
 }

@@ -6,6 +6,7 @@ interface IDogRepository {
   getById(id: ObjectId): Promise<Dog | null>;
   insertOne(dog: Dog): Promise<void>;
   updateOne(id: ObjectId, dog: Partial<Dog>): Promise<void>;
+  deleteOne(id: ObjectId): Promise<void>;
 }
 
 class DogRepository implements IDogRepository {
@@ -29,6 +30,10 @@ class DogRepository implements IDogRepository {
 
   public async updateOne(id: ObjectId, updatedDog: Partial<Dog>): Promise<void> {
     await this.collection.updateOne({ _id: id }, updatedDog);
+  }
+
+  public async deleteOne(id: ObjectId): Promise<void> {
+    await this.collection.deleteOne({ _id: id });
   }
 }
 

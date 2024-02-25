@@ -5,6 +5,7 @@ import {
   getAllDogsController,
   getDogByIdController,
   registerDogController,
+  releaseDogFromCustodyController,
 } from '../controllers';
 import { Middleware } from '../utils/Middleware';
 
@@ -30,6 +31,12 @@ dogRouter.put(
 
 dogRouter.post('/dogs/custody', Middleware.checkDogValidity(), (request, response) =>
   addDogToCustodyController.execute(request, response)
+);
+
+dogRouter.delete(
+  '/dogs/custody/:id',
+  Middleware.checkObjectIdValidity(),
+  (request, response) => releaseDogFromCustodyController.execute(request, response)
 );
 
 export { dogRouter };
