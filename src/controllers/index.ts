@@ -1,5 +1,6 @@
 import { dogRepository } from '../repositories';
 import { cacheService } from '../utils';
+import { AddDogToCustodyController } from './AddDogToCustodyController';
 import { AdoptDogController } from './AdoptDogController';
 import { GetAllDogsController } from './GetAllDogsController';
 import { GetDogByIdController } from './GetDogByIdController';
@@ -13,9 +14,12 @@ const getDogByIdController = new GetDogByIdController(dogRepository);
 
 const adoptDogController = new AdoptDogController(dogRepository, cacheService);
 
+const addDogToCustodyController = new AddDogToCustodyController(dogRepository);
+
 export {
   getAllDogsController,
   registerDogController,
   getDogByIdController,
   adoptDogController,
+  addDogToCustodyController,
 };

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  addDogToCustodyController,
   adoptDogController,
   getAllDogsController,
   getDogByIdController,
@@ -25,6 +26,10 @@ dogRouter.put(
   '/dogs/:id/adopt',
   Middleware.checkObjectIdValidity(),
   (request, response) => adoptDogController.execute(request, response)
+);
+
+dogRouter.post('/dogs/custody', Middleware.checkDogValidity(), (request, response) =>
+  addDogToCustodyController.execute(request, response)
 );
 
 export { dogRouter };

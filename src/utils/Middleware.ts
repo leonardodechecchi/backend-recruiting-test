@@ -7,13 +7,13 @@ class Middleware {
 
   public static checkObjectIdValidity(): RequestHandler {
     return (request, response, next) => {
+      const { params } = request;
+
       if (
-        !(
-          request.params &&
-          request.params.id &&
-          typeof request.params.id === 'string' &&
-          ObjectId.isValid(request.params.id)
-        )
+        !params ||
+        !params.id ||
+        typeof params.id !== 'string' ||
+        !ObjectId.isValid(params.id)
       ) {
         return response.status(400).json({ message: 'Invalid id' });
       }
@@ -30,7 +30,8 @@ class Middleware {
         !dog ||
         typeof dog.name !== 'string' ||
         typeof dog.breed !== 'string' ||
-        typeof dog.age !== 'number'
+        typeof dog.age !== 'number' ||
+        dog.age < 0
       ) {
         return response.status(400).json({ message: 'Invalid dog data' });
       }
