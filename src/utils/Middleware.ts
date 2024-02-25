@@ -30,10 +30,7 @@ class Middleware {
         !dog ||
         typeof dog.name !== 'string' ||
         typeof dog.breed !== 'string' ||
-        typeof dog.age !== 'number' ||
-        typeof dog.status !== 'string' ||
-        !['available', 'adopted', 'in-custody'].includes(dog.status) ||
-        !(dog.adoptionDate instanceof Date)
+        typeof dog.age !== 'number'
       ) {
         return response.status(400).json({ message: 'Invalid dog data' });
       }
