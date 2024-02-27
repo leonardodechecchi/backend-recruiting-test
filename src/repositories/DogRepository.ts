@@ -1,39 +1,37 @@
-import { Collection, Db, ObjectId } from 'mongodb';
-import { Dog } from '../models/Dog';
+import { Dog, DogModel } from '../models/Dog';
+import { Types } from 'mongoose';
 
 interface IDogRepository {
   getAll(): Promise<Dog[]>;
-  getById(id: ObjectId): Promise<Dog | null>;
+  getById(id: Types.ObjectId): Promise<Dog | null>;
   insertOne(dog: Dog): Promise<void>;
-  updateOne(id: ObjectId, dog: Partial<Dog>): Promise<void>;
-  deleteOne(id: ObjectId): Promise<void>;
+  updateOne(id: Types.ObjectId, dog: Partial<Dog>): Promise<void>;
+  deleteOne(id: Types.ObjectId): Promise<void>;
 }
 
 class DogRepository implements IDogRepository {
-  private collection: Collection<Dog>;
+  private readonly model = DogModel;
 
-  constructor(db: Db) {
-    this.collection = db.collection('dogs');
-  }
+  constructor() {}
 
   public async getAll(): Promise<Dog[]> {
-    return this.collection.find().toArray();
+    return this.model.find().lean();
   }
 
-  public async getById(id: ObjectId): Promise<Dog | null> {
-    return this.collection.findOne({ _id: id });
+  public async getById(id: Types.ObjectId): Promise<Dog | null> {
+    return this.model.findOne({ _id: id }).lean() ?? null;
   }
 
   public async insertOne(dog: Dog): Promise<void> {
-    await this.collection.insertOne(dog);
+    await this.model.create(dog);
   }
 
-  public async updateOne(id: ObjectId, updatedDog: Partial<Dog>): Promise<void> {
-    await this.collection.updateOne({ _id: id }, updatedDog);
+  public async updateOne(id: Types.ObjectId, updatedDog: Partial<Dog>): Promise<void> {
+    await this.model.updateOne({ _id: id }, updatedDog);
   }
 
-  public async deleteOne(id: ObjectId): Promise<void> {
-    await this.collection.deleteOne({ _id: id });
+  public async deleteOne(id: Types.ObjectId): Promise<void> {
+    await this.model.findOneAndDelete({ _id: id });
   }
 }
 

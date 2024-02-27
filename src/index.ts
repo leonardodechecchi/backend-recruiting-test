@@ -1,35 +1,9 @@
-import { config } from 'dotenv';
-import express from 'express';
-import http from 'http';
-import { MongoClient } from 'mongodb';
-import { dogRouter } from './routes';
+import { EnvUtil } from './utils/Env';
+import { MongoDb } from './utils/MongoDb';
+import { Server } from './Server';
 
-const result = config();
-if (result.error) {
-  process.exit(1);
-}
+const env = new EnvUtil();
+const mongoDb = new MongoDb(env);
+const server = new Server(env, mongoDb);
 
-const app = express();
-const httpPort = process.env.HTTP_PORT!;
-
-app.use(express.json());
-
-app.use('/api', dogRouter);
-
-const dbClient = new MongoClient(process.env.DB_CONN_STRING as string);
-
-async function run() {
-  try {
-    await dbClient.connect();
-  } finally {
-    await dbClient.close();
-  }
-}
-
-run().then(() => {
-  const httpServer = http.createServer(app);
-
-  httpServer.listen(httpPort, () => {
-    console.log(`Server listening on http://localhost:${httpPort}/`);
-  });
-});
+server.listen();

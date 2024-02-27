@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { Dog } from '../models/Dog';
 import { IDogRepository } from './DogRepository';
 
+/*
 class MockDogRepository implements IDogRepository {
   private dogs: Dog[];
 
@@ -35,7 +36,7 @@ class MockDogRepository implements IDogRepository {
   }
 
   public async insertOne(dog: Dog): Promise<void> {
-    this.dogs.push({ id: new ObjectId(), ...dog });
+    this.dogs.push({ _id: new ObjectId(), ...dog });
   }
 
   public async updateOne(id: ObjectId, updatedDog: Partial<Dog>): Promise<void> {
@@ -56,3 +57,4 @@ class MockDogRepository implements IDogRepository {
 }
 
 export { MockDogRepository };
+*/

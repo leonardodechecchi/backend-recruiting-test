@@ -9,6 +9,7 @@ abstract class BaseController {
     try {
       await this.executeImpl(request, response);
     } catch (error) {
+      console.log(error);
       this.fail(response);
     }
   }

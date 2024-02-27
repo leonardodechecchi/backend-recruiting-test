@@ -1,14 +1,26 @@
-import { ObjectId } from 'mongodb';
+import { Schema, Types, model } from 'mongoose';
 
-class Dog {
-  constructor(
-    public name: string,
-    public breed: string,
-    public age: number,
-    public status: 'available' | 'adopted' | 'in-custody' = 'available',
-    public adoptionDate?: Date,
-    public id?: ObjectId
-  ) {}
-}
+type Dog = {
+  name: string;
+  breed: string;
+  age: number;
+  status: 'available' | 'adopted' | 'in-custody';
+  adoptionDate?: Date;
+  _id?: Types.ObjectId;
+};
 
-export { Dog };
+const dogSchema = new Schema<Dog>({
+  name: { type: String, required: true },
+  breed: { type: String, required: true },
+  age: { type: Number, required: true },
+  status: {
+    type: String,
+    enum: ['available', 'adopted', 'in-custody'],
+    required: true,
+  },
+  adoptionDate: { type: Date },
+});
+
+const DogModel = model<Dog>('dogs', dogSchema);
+
+export { Dog, DogModel };

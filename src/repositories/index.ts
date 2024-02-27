@@ -1,6 +1,5 @@
-import { IDogRepository } from './DogRepository';
-import { MockDogRepository } from './MockDogRepository';
+import { DogRepository, IDogRepository } from './DogRepository';
 
-const dogRepository: IDogRepository = new MockDogRepository();
+const dogRepository: IDogRepository = new DogRepository();
 
 export { dogRepository };
