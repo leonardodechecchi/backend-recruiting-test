@@ -14,29 +14,36 @@ abstract class BaseController {
     }
   }
 
-  protected ok<T>(response: Response, dto?: T): void {
-    if (!!dto) {
-      response.type('application/json');
-      response.status(200).json(dto);
+  private static errorRequest(
+    response: Response,
+    httpCode: 400 | 401 | 404 | 500,
+    message: string
+  ): void {
+    response.status(httpCode).json({ httpCode, message });
+  }
+
+  protected ok<T>(response: Response, data?: T): void {
+    if (!!data) {
+      response.status(200).json(data);
     } else {
       response.sendStatus(200);
     }
   }
 
   protected badRequest(response: Response, message?: string): void {
-    response.status(400).json({ message: message ? message : 'Bad Request' });
+    BaseController.errorRequest(response, 400, message ?? 'Bad Request');
   }
 
   protected unauthorized(response: Response, message?: string): void {
-    response.status(401).json({ message: message ? message : 'Unauthorized' });
+    BaseController.errorRequest(response, 401, message ?? 'Unauthorized');
   }
 
   protected notFound(response: Response, message?: string): void {
-    response.status(404).json({ message: message ? message : 'Not Found' });
+    BaseController.errorRequest(response, 404, message ?? 'Not Found');
   }
 
   protected fail(response: Response): void {
-    response.status(500).json({ message: 'Internal Server Error' });
+    BaseController.errorRequest(response, 500, 'Internal Server Error');
   }
 }
 
