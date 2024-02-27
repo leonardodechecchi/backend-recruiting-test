@@ -1,6 +1,6 @@
 import { ICacheService } from './CacheService';
 import { DogCacheService } from './DogCacheService';
 
-const cacheService: ICacheService = new DogCacheService();
+const dogCacheService: ICacheService = new DogCacheService();
 
-export { cacheService };
+export { dogCacheService };

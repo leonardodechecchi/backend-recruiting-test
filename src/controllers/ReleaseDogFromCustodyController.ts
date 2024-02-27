@@ -16,6 +16,10 @@ class ReleaseDogFromCustodyController extends BaseController {
       return this.notFound(response);
     }
 
+    if (dog.status !== 'in-custody') {
+      return this.unauthorized(response);
+    }
+
     await this.dogRepository.deleteOne(dogId);
 
     return this.ok(response);
