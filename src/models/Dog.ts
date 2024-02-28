@@ -9,17 +9,20 @@ type Dog = {
   _id?: Types.ObjectId;
 };
 
-const dogSchema = new Schema<Dog>({
-  name: { type: String, required: true },
-  breed: { type: String, required: true },
-  age: { type: Number, required: true },
-  status: {
-    type: String,
-    enum: ['available', 'adopted', 'in-custody'],
-    required: true,
+const dogSchema = new Schema<Dog>(
+  {
+    name: { type: String, required: true },
+    breed: { type: String, required: true },
+    age: { type: Number, required: true },
+    status: {
+      type: String,
+      enum: ['available', 'adopted', 'in-custody'],
+      required: true,
+    },
+    adoptionDate: { type: Date },
   },
-  adoptionDate: { type: Date },
-});
+  { versionKey: false }
+);
 
 const DogModel = model<Dog>('dogs', dogSchema);
 
