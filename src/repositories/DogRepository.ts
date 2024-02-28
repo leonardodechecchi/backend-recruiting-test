@@ -4,6 +4,7 @@ import { Types } from 'mongoose';
 interface IDogRepository {
   getAll(): Promise<Dog[]>;
   getById(id: Types.ObjectId): Promise<Dog | null>;
+  getStatistics(): Promise<any[]>;
   insertOne(dog: Dog): Promise<void>;
   updateOne(id: Types.ObjectId, dog: Partial<Dog>): Promise<void>;
   deleteOne(id: Types.ObjectId): Promise<void>;
@@ -20,6 +21,12 @@ class DogRepository implements IDogRepository {
 
   public async getById(id: Types.ObjectId): Promise<Dog | null> {
     return this.model.findOne({ _id: id }).lean() ?? null;
+  }
+
+  public async getStatistics(): Promise<any[]> {
+    return this.model.aggregate<{ _id: string; count: number }[]>([
+      { $group: { _id: '$status', count: { $sum: 1 } } },
+    ]);
   }
 
   public async insertOne(dog: Dog): Promise<void> {
