@@ -4,9 +4,18 @@ import { IDogRepository } from '../repositories/DogRepository';
 import { Dog } from '../models/Dog';
 import { ObjectId } from 'mongodb';
 
+/**
+ * Controller che gestisce la richiesta di ottenere un cane dal canile tramite il suo ID.
+ *
+ * @param dogRepository Il repository dei cani.
+ */
 class GetDogByIdController extends BaseController {
-  constructor(private dogRepository: IDogRepository) {
+  private readonly dogRepository: IDogRepository;
+
+  constructor(dogRepository: IDogRepository) {
     super();
+
+    this.dogRepository = dogRepository;
   }
 
   protected async executeImpl(request: Request, response: Response): Promise<void> {

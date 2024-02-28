@@ -4,12 +4,21 @@ import { IDogRepository } from '../repositories/DogRepository';
 import { ObjectId } from 'mongodb';
 import { ICacheService } from '../utils/CacheService';
 
+/**
+ * Controller che gestisce l'adozione di un cane presente nel canile.
+ *
+ * @param dogRepository Il repository dei cani.
+ * @param cacheService Il servizio che gestisce la cache.
+ */
 class AdoptDogController extends BaseController {
-  constructor(
-    private dogRepository: IDogRepository,
-    private cacheService: ICacheService
-  ) {
+  private readonly dogRepository: IDogRepository;
+  private readonly cacheService: ICacheService;
+
+  constructor(dogRepository: IDogRepository, cacheService: ICacheService) {
     super();
+
+    this.dogRepository = dogRepository;
+    this.cacheService = cacheService;
   }
 
   protected async executeImpl(request: Request, response: Response): Promise<void> {

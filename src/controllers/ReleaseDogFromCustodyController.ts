@@ -4,6 +4,12 @@ import { IDogRepository } from '../repositories/DogRepository';
 import { ObjectId } from 'mongodb';
 import { ICacheService } from '../utils/CacheService';
 
+/**
+ * Controller che gestisce la richiesta di rilasciare un cane dalla custodia.
+ *
+ * @param dogRepository Il repository dei cani.
+ * @param cacheService Il servizio che gestisce la cache.
+ */
 class ReleaseDogFromCustodyController extends BaseController {
   private readonly dogRepository: IDogRepository;
   private readonly cacheService: ICacheService;

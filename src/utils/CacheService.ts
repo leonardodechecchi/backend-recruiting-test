@@ -9,7 +9,7 @@ type CacheItem<T> = {
   expiry: number;
 };
 
-abstract class CacheService implements ICacheService {
+class CacheService implements ICacheService {
   private cache: Record<string, CacheItem<any>>;
   private duration: number;
 

@@ -4,6 +4,12 @@ import { IDogRepository } from '../repositories/DogRepository';
 import { Dog } from '../models/Dog';
 import { ICacheService } from '../utils/CacheService';
 
+/**
+ * Controller che gestisce la richiesta di registrare un nuovo cane nel canile.
+ *
+ * @param dogRepository Il repository dei cani.
+ * @param cacheService Il servizio che gestisce la cache.
+ */
 class RegisterDogController extends BaseController {
   private readonly dogRepository: IDogRepository;
   private readonly dogCacheService: ICacheService;

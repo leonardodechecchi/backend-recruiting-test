@@ -3,9 +3,18 @@ import { BaseController } from './BaseController';
 import { Dog } from '../models/Dog';
 import { IDogRepository } from '../repositories/DogRepository';
 
+/**
+ * Controller che gestisce l'aggiunta di un nuovo cane in custodia nel canile.
+ *
+ * @param dogRepository Il repository dei cani.
+ */
 class AddDogToCustodyController extends BaseController {
-  constructor(private dogRepository: IDogRepository) {
+  private readonly dogRepository: IDogRepository;
+
+  constructor(dogRepository: IDogRepository) {
     super();
+
+    this.dogRepository = dogRepository;
   }
 
   protected async executeImpl(request: Request, response: Response): Promise<void> {

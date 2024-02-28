@@ -1,5 +1,10 @@
 import { Request, Response } from 'express';
 
+/**
+ * Classe astratta che rappresenta un controller di base per gestire le richieste HTTP.
+ * Fornisce metodi di utilità comuni per gestire le risposte HTTP.
+ * Le classi che estendono `BaseController` devono implementare il metodo `executeImpl` ovvero il corpo del controller.
+ */
 abstract class BaseController {
   constructor() {}
 
