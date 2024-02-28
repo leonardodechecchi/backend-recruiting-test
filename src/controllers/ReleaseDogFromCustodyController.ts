@@ -2,10 +2,17 @@ import { Request, Response } from 'express';
 import { BaseController } from './BaseController';
 import { IDogRepository } from '../repositories/DogRepository';
 import { ObjectId } from 'mongodb';
+import { ICacheService } from '../utils/CacheService';
 
 class ReleaseDogFromCustodyController extends BaseController {
-  constructor(private dogRepository: IDogRepository) {
+  private readonly dogRepository: IDogRepository;
+  private readonly cacheService: ICacheService;
+
+  constructor(dogRepository: IDogRepository, cacheService: ICacheService) {
     super();
+
+    this.dogRepository = dogRepository;
+    this.cacheService = cacheService;
   }
 
   protected async executeImpl(request: Request, response: Response): Promise<void> {
@@ -21,6 +28,8 @@ class ReleaseDogFromCustodyController extends BaseController {
     }
 
     await this.dogRepository.deleteOne(dogId);
+
+    this.cacheService.purge();
 
     return this.ok(response);
   }
