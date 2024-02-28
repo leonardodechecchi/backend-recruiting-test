@@ -22,7 +22,7 @@ NODE_ENV=""       # Ambiente di sviluppo
 DB_CONN_STRING="" # Stringa di connessione al database
 DB_NAME=""        # Nome del database
 HTTP_PORT=        # Porta HTTP
-JWT_SECRET=       # Stringa di chiave per firmare i jwt
+JWT_SECRET=""     # Stringa di chiave per firmare i jwt
 ```
 
 ### Installazione delle dipendenze
@@ -40,3 +40,7 @@ Per eseguire il progetto, digitare il comando da terminale:
 ```
 npm run dev
 ```
+
+## Note
+
+Per questioni organizzative non è stata implementata completamente la parte di autenticazione e autorizzazione per le operazioni di adozione e custodia dei cani.
