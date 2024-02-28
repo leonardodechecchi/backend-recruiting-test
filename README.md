@@ -22,6 +22,7 @@ NODE_ENV=""       # Ambiente di sviluppo
 DB_CONN_STRING="" # Stringa di connessione al database
 DB_NAME=""        # Nome del database
 HTTP_PORT=        # Porta HTTP
+JWT_SECRET=       # Stringa di chiave per firmare i jwt
 ```
 
 ### Installazione delle dipendenze
