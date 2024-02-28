@@ -39,6 +39,24 @@ class Middleware {
       return next();
     };
   }
+
+  public static checkAuth(): RequestHandler {
+    return (request, response, next) => {
+      const { authorization } = request.headers;
+
+      if (!authorization) {
+        return response.status(401).json({ message: 'Authorization header is missing' });
+      }
+
+      const [, jwt] = authorization.split(' ');
+
+      if (!jwt) {
+        return response.json(401).json({ message: 'JWT not provided' });
+      }
+
+      return next();
+    };
+  }
 }
 
 export { Middleware };

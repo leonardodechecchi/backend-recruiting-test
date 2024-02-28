@@ -18,6 +18,7 @@ Questo progetto implementa una REST API per la gestione di un canile virtuale, c
 Il progetto utilizza un file `.env` per gestire le variabili d'ambiente. Prima di avviare l'applicazione, è necessario creare un file `.env` nella radice del progetto e configurare le seguenti variabili:
 
 ```
+NODE_ENV=""       # Ambiente di sviluppo
 DB_CONN_STRING="" # Stringa di connessione al database
 DB_NAME=""        # Nome del database
 HTTP_PORT=        # Porta HTTP
@@ -29,4 +30,12 @@ Per installare le dipendenze, eseguire il seguente comando da terminale:
 
 ```
 npm install
+```
+
+### Esecuzione
+
+Per eseguire il progetto, digitare il comando da terminale:
+
+```
+npm run dev
 ```

@@ -6,6 +6,7 @@ type Env = {
   DB_CONN_STRING: string;
   DB_NAME: string;
   HTTP_PORT: number;
+  JWT_SECRET: string;
 } & CleanedEnvAccessors;
 
 class EnvUtil {
@@ -17,6 +18,7 @@ class EnvUtil {
       DB_CONN_STRING: str(),
       DB_NAME: str(),
       HTTP_PORT: num({ default: 3000 }),
+      JWT_SECRET: str(),
     });
   }
 
@@ -31,6 +33,12 @@ class EnvUtil {
   public get httpPort(): number {
     return this.env.HTTP_PORT;
   }
+
+  public get jwtSecret(): string {
+    return this.env.JWT_SECRET;
+  }
 }
 
-export { EnvUtil };
+const env = new EnvUtil();
+
+export { env };

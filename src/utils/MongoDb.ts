@@ -1,12 +1,8 @@
+import { env } from './Env';
 import { connection, connect, disconnect } from 'mongoose';
-import { EnvUtil } from './Env';
 
 class MongoDb {
-  private readonly env: EnvUtil;
-
-  constructor(env: EnvUtil) {
-    this.env = env;
-  }
+  constructor() {}
 
   public async connect(): Promise<void> {
     connection.on('connected', () => {
@@ -21,7 +17,7 @@ class MongoDb {
       console.log('An error occurred during a MongoDB connection');
     });
 
-    await connect(`${this.env.dbConnectionString}/${this.env.dbName}`);
+    await connect(`${env.dbConnectionString}/${env.dbName}`);
   }
 
   public async disconnect(): Promise<void> {

@@ -1,9 +1,7 @@
-import { EnvUtil } from './utils/Env';
 import { MongoDb } from './utils/MongoDb';
-import { Server } from './Server';
+import { Server } from './utils/Server';
 
-const env = new EnvUtil();
-const mongoDb = new MongoDb(env);
-const server = new Server(env, mongoDb);
+const mongoDb = new MongoDb();
+const server = new Server(mongoDb);
 
 server.listen();
