@@ -1,0 +1,47 @@
+openapi: 3.0.0
+info:
+  title: REST API Canile Virtuale
+  version: 1.0.0
+tags: null
+servers:
+  - url: http://localhost:3000/api/v1
+components:
+  schemas:
+    Dog:
+      $ref: dogs.yaml#/components/schemas/Dog
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        dogs:
+          type: array
+          items:
+            $ref: "#/components/schemas/Dog"
+    DogRegistration:
+      $ref: dogs.yaml#/components/schemas/DogRegistration
+    Stats:
+      $ref: dogs.yaml#/components/schemas/Stats
+    ErrorResponse:
+      $ref: dogs.yaml#/components/schemas/ErrorResponse
+    Registration:
+      $ref: auth.yaml#/components/schemas/Registration
+paths:
+  /dogs/stats:
+    $ref: dogs.yaml#/paths/~1dogs~1stats
+  /dogs/:
+    $ref: dogs.yaml#/paths/~1dogs~1
+  /dogs/custody:
+    $ref: dogs.yaml#/paths/~1dogs~1custody
+  "/dogs/{dogId}/":
+    $ref: dogs.yaml#/paths/~1dogs~1{dogId}~1
+  "/dogs/{dogId}/custody":
+    $ref: dogs.yaml#/paths/~1dogs~1{dogId}~1custody
+  "/dogs/{dogId}/adopt":
+    $ref: dogs.yaml#/paths/~1dogs~1{dogId}~1adopt
+  /auth/register:
+    $ref: auth.yaml#/paths/~1auth~1register
+  /auth/login:
+    $ref: auth.yaml#/paths/~1auth~1login

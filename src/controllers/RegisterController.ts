@@ -1,22 +1,23 @@
-import { Request, Response } from 'express';
-import { BaseController } from './BaseController';
-import { IUserRepository } from '../repositories/UserRepository';
+import { Request, Response } from "express";
+import { BaseController } from "./BaseController";
+import User from "./../models/User";
 
 class RegisterController extends BaseController {
-  private readonly userRepository: IUserRepository;
-
-  constructor(userRepository: IUserRepository) {
-    super();
-
-    this.userRepository = userRepository;
-  }
-
-  protected async executeImpl(request: Request, response: Response): Promise<void> {
+  protected async executeImpl(
+    request: Request,
+    response: Response
+  ): Promise<void> {
     const { email, password } = request.body;
 
-    await this.userRepository.insertOne({ email, password });
+    const user = await User.findOne({ email });
 
-    return this.ok(response);
+    if (user) {
+      return this.conflict(response, "Email address already taken");
+    }
+
+    await User.create(new User({ email, password }));
+
+    this.ok(response);
   }
 }
 

@@ -1,0 +1,365 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "REST API Canile Virtuale",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "User"
+    },
+    {
+      "name": "Dog"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
+  "paths": {
+    "/dogs": {
+      "get": {
+        "tags": ["Dog"],
+        "summary": "Ritorna la lista dei cani del canile",
+        "responses": {
+          "200": {
+            "description": "Operazione andata a buon fine",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Dog"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dogs/stats": {
+      "get": {
+        "tags": ["Dog"],
+        "summary": "Ritorna le statistiche giornaliere dei cani",
+        "responses": {
+          "200": {
+            "description": "Operazione andata a buon fine",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "object",
+                        "properties": {
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date"
+                          }
+                        }
+                      },
+                      "available": {
+                        "type": "integer",
+                        "default": 2
+                      },
+                      "in_custody": {
+                        "type": "integer",
+                        "default": 5
+                      },
+                      "adopted": {
+                        "type": "integer",
+                        "default": 34
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dogs/{dogId}": {
+      "get": {
+        "tags": ["Dog"],
+        "summary": "Ottiene il cane con l'id specificato",
+        "parameters": [
+          {
+            "name": "dogId",
+            "in": "path",
+            "description": "ID del cane",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cane trovato con successo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dog"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "dogId non valido"
+          },
+          "404": {
+            "description": "Il cane non è stato trovato"
+          }
+        }
+      }
+    },
+    "/dogs/new": {
+      "post": {
+        "tags": ["Dog"],
+        "summary": "Registra un nuovo cane nel canile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "default": "Cupcake"
+                  },
+                  "breed": {
+                    "type": "string",
+                    "default": "Pitbull"
+                  },
+                  "age": {
+                    "type": "integer",
+                    "default": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cane registrato con successo"
+          },
+          "400": {
+            "description": "Il corpo della richiesta contiene dati non validi"
+          }
+        }
+      }
+    },
+    "/dogs/{dogId}/adopt": {
+      "put": {
+        "tags": ["Dog"],
+        "summary": "Adotta un cane del canile con l'id specificato",
+        "parameters": [
+          {
+            "name": "dogId",
+            "in": "path",
+            "description": "ID del cane",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Il cane è stato adottato con successo"
+          },
+          "400": {
+            "description": "dogId non valido"
+          },
+          "401": {
+            "description": "Il cane è già stato adottato"
+          },
+          "404": {
+            "description": "Il cane non è stato trovato"
+          }
+        }
+      }
+    },
+    "/dogs/custody": {
+      "post": {
+        "tags": ["Dog"],
+        "summary": "Registra un nuovo cane in custodia nel canile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "default": "Cupcake"
+                  },
+                  "breed": {
+                    "type": "string",
+                    "default": "Pitbull"
+                  },
+                  "age": {
+                    "type": "integer",
+                    "default": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cane registrato con successo"
+          },
+          "400": {
+            "description": "Il corpo della richiesta contiene dati non validi"
+          }
+        }
+      }
+    },
+    "/dogs/custody/{dogId}": {
+      "delete": {
+        "tags": ["Dog"],
+        "summary": "Rimuove un cane dalla custodia dal canile con l'id specificato",
+        "parameters": [
+          {
+            "name": "dogId",
+            "in": "path",
+            "description": "ID del cane",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Il cane è stato rilasciato dalla custodia con successo"
+          },
+          "400": {
+            "description": "dogId non valido"
+          },
+          "404": {
+            "description": "Il cane non è stato trovato"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Effettua il login di un utente",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "default": "test@test.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "default": "test123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login effettuato con successo"
+          },
+          "401": {
+            "description": "Credenziali errate"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Effettua la registrazione di un utente",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "default": "test@test.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "default": "test123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registrazione effettuata con successo"
+          },
+          "401": {
+            "description": "Credenziali errate"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Dog": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "breed": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["available", "in-custody", "adopted"]
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

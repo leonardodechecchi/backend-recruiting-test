@@ -1,6 +1,8 @@
-import { RequestHandler } from 'express';
-import { ObjectId } from 'mongodb';
-import { Dog } from '../models/Dog';
+import { RequestHandler } from "express";
+import { ObjectId } from "mongodb";
+import { IDog } from "../models/Dog";
+import { AuthService } from "../services/AuthService";
+import User from "../models/User";
 
 class Middleware {
   constructor() {}
@@ -12,10 +14,10 @@ class Middleware {
       if (
         !params ||
         !params.id ||
-        typeof params.id !== 'string' ||
+        typeof params.id !== "string" ||
         !ObjectId.isValid(params.id)
       ) {
-        return response.status(400).json({ message: 'Invalid id' });
+        return response.status(400).json({ message: "Invalid id" });
       }
 
       return next();
@@ -24,16 +26,16 @@ class Middleware {
 
   public static checkDogValidity(): RequestHandler {
     return (request, response, next) => {
-      const dog = request.body as Dog;
+      const dog = request.body as IDog;
 
       if (
         !dog ||
-        typeof dog.name !== 'string' ||
-        typeof dog.breed !== 'string' ||
-        typeof dog.age !== 'number' ||
+        typeof dog.name !== "string" ||
+        typeof dog.breed !== "string" ||
+        typeof dog.age !== "number" ||
         dog.age < 0
       ) {
-        return response.status(400).json({ message: 'Invalid dog data' });
+        return response.status(400).json({ message: "Invalid dog data" });
       }
 
       return next();
@@ -41,17 +43,25 @@ class Middleware {
   }
 
   public static checkAuth(): RequestHandler {
-    return (request, response, next) => {
-      const { authorization } = request.headers;
-
-      if (!authorization) {
-        return response.status(401).json({ message: 'Authorization header is missing' });
-      }
-
-      const [, jwt] = authorization.split(' ');
+    return async (request, response, next) => {
+      const { jwt } = request.cookies;
 
       if (!jwt) {
-        return response.json(401).json({ message: 'JWT not provided' });
+        return response.status(401).json({ message: "JWT not provided" });
+      }
+
+      try {
+        const decodedToken = AuthService.verifyJWT(jwt);
+
+        const user = await User.findOne({ email: decodedToken.email });
+
+        if (user) {
+          request.user = user;
+        } else {
+          return response.status(401).json({ message: "User not found" });
+        }
+      } catch (error) {
+        return response.status(401).json({ message: "Invalid token" });
       }
 
       return next();

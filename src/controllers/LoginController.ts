@@ -1,29 +1,26 @@
-import { Request, Response } from 'express';
-import { BaseController } from './BaseController';
-import { IUserRepository } from '../repositories/UserRepository';
-import { AuthService } from '../utils/AuthService';
+import { Request, Response } from "express";
+import { BaseController } from "./BaseController";
+import { AuthService } from "../services/AuthService";
+import User from "../models/User";
 
 class LoginController extends BaseController {
-  private readonly userRepository: IUserRepository;
-
-  constructor(userRepository: IUserRepository) {
-    super();
-
-    this.userRepository = userRepository;
-  }
-
-  protected async executeImpl(request: Request, response: Response): Promise<void> {
+  protected async executeImpl(
+    request: Request,
+    response: Response
+  ): Promise<void> {
     const { email, password } = request.body;
 
-    const user = await this.userRepository.getByEmail(email);
+    const user = await User.findOne({ email });
 
     if (!user || !AuthService.comparePasswords(password, user.password)) {
-      return this.unauthorized(response, 'Credenziali errate');
+      return this.unauthorized(response, "Credenziali errate");
     }
 
     const jwt = AuthService.signJWT({ email });
 
-    return this.ok(response, { jwt });
+    response.cookie("jwt", jwt, { httpOnly: true });
+
+    return this.ok(response);
   }
 }
 

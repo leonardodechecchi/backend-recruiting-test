@@ -1,0 +1,250 @@
+openapi: 3.0.0
+info:
+  title: dogs
+  version: 1.0.0
+tags:
+  - name: Dogs
+components:
+  schemas:
+    Dog:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        breed:
+          type: string
+        age:
+          type: number
+        status:
+          type: string
+        created_at:
+          type: string
+          example: 2021-10-20T13:02:95.226Z
+        updated_at:
+          type: string
+          example: 2021-10-20T13:02:95.226Z
+      title: Dog
+    DogRegistration:
+      type: object
+      properties:
+        name:
+          type: string
+        breed:
+          type: string
+        age:
+          type: number
+      title: DogRegistration
+    Stats:
+      type: object
+      properties:
+        _id:
+          type: object
+          properties:
+            createdAt:
+              type: string
+              format: date
+            updatedAt:
+              type: string
+              format: date
+        available:
+          type: number
+        adopted:
+          type: number
+        in_custody:
+          type: number
+      title: Stats
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      title: ErrorResponse
+  parameters: {}
+paths:
+  /dogs/stats:
+    get:
+      tags:
+        - Dogs
+      operationId: getDogStats
+      summary: Restituisce le statistiche giornaliere dei cani
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  $ref: index.yaml#/components/schemas/Stats
+                title: ResponseGetDogStats
+          description: OutputGetDogStats
+  /dogs/:
+    get:
+      tags:
+        - Dogs
+      operationId: getDogs
+      summary: Restituisce la lista di tutti i cani presenti nel canile
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  $ref: index.yaml#/components/schemas/Dog
+                title: ResponseGetDogs
+          description: OutputGetDogs
+    post:
+      tags:
+        - Dogs
+      operationId: registerDog
+      summary: Registra un cane nel canile
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: index.yaml#/components/schemas/Dog
+                title: ResponseRegisterDog
+          description: OutputRegisterDog
+        "400":
+          content:
+            application/json:
+              schema:
+                title: ResponseRegisterDog
+          description: OutputRegisterDog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: index.yaml#/components/schemas/DogRegistration
+              title: InputRegisterDog
+  /dogs/custody:
+    post:
+      tags:
+        - Dogs
+      operationId: putDogInCustody
+      summary: Aggiunge un cane in custodia
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: index.yaml#/components/schemas/Dog
+                title: ResponsePutDogInCustody
+          description: OutputPutDogInCustody
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: index.yaml#/components/schemas/DogRegistration
+              title: InputPutDogInCustody
+  "/dogs/{dogId}/":
+    get:
+      tags:
+        - Dogs
+      operationId: getDogByID
+      summary: Restituisce il cane con l'id associato
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: index.yaml#/components/schemas/Dog
+                title: ResponseGetDogByID
+          description: OutputGetDogByID
+        "404":
+          content:
+            application/json:
+              schema:
+                title: ResponseGetDogByID
+          description: OutputGetDogByID
+      parameters:
+        - name: dogId
+          in: path
+          required: true
+          schema:
+            type: string
+  "/dogs/{dogId}/custody":
+    delete:
+      tags:
+        - Dogs
+      operationId: releaseDogFromCustody
+      summary: 'Rimuove il cane dalla custodia | Permission required: ["delete", "Dog"]'
+      description: |
+        
+        **Permission required**: ["delete", "Dog"]
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: index.yaml#/components/schemas/Dog
+                title: ResponseReleaseDogFromCustody
+          description: OutputReleaseDogFromCustody
+        "401":
+          content:
+            application/json:
+              schema:
+                title: ResponseReleaseDogFromCustody
+          description: OutputReleaseDogFromCustody
+        "404":
+          content:
+            application/json:
+              schema:
+                title: ResponseReleaseDogFromCustody
+          description: OutputReleaseDogFromCustody
+      parameters:
+        - name: dogId
+          in: path
+          required: true
+          schema:
+            type: string
+  "/dogs/{dogId}/adopt":
+    put:
+      tags:
+        - Dogs
+      operationId: adoptDog
+      summary: Adotta un cane del canile con l'id specificato
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: index.yaml#/components/schemas/Dog
+                title: ResponseAdoptDog
+          description: OutputAdoptDog
+        "400":
+          content:
+            application/json:
+              schema:
+                title: ResponseAdoptDog
+          description: OutputAdoptDog
+        "401":
+          content:
+            application/json:
+              schema:
+                title: ResponseAdoptDog
+          description: OutputAdoptDog
+        "404":
+          content:
+            application/json:
+              schema:
+                title: ResponseAdoptDog
+          description: OutputAdoptDog
+      parameters:
+        - name: dogId
+          in: path
+          required: true
+          schema:
+            type: string

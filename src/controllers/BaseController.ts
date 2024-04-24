@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
 /**
  * Classe astratta che rappresenta un controller di base per gestire le richieste HTTP.
@@ -8,7 +8,10 @@ import { Request, Response } from 'express';
 abstract class BaseController {
   constructor() {}
 
-  protected abstract executeImpl(request: Request, response: Response): Promise<void>;
+  protected abstract executeImpl(
+    request: Request,
+    response: Response
+  ): Promise<void>;
 
   public async execute(request: Request, response: Response): Promise<void> {
     try {
@@ -21,7 +24,7 @@ abstract class BaseController {
 
   private static errorRequest(
     response: Response,
-    httpCode: 400 | 401 | 404 | 500,
+    httpCode: 400 | 401 | 404 | 409 | 500,
     message: string
   ): void {
     response.status(httpCode).json({ httpCode, message });
@@ -36,19 +39,23 @@ abstract class BaseController {
   }
 
   protected badRequest(response: Response, message?: string): void {
-    BaseController.errorRequest(response, 400, message ?? 'Bad Request');
+    BaseController.errorRequest(response, 400, message ?? "Bad Request");
   }
 
   protected unauthorized(response: Response, message?: string): void {
-    BaseController.errorRequest(response, 401, message ?? 'Unauthorized');
+    BaseController.errorRequest(response, 401, message ?? "Unauthorized");
   }
 
   protected notFound(response: Response, message?: string): void {
-    BaseController.errorRequest(response, 404, message ?? 'Not Found');
+    BaseController.errorRequest(response, 404, message ?? "Not Found");
+  }
+
+  protected conflict(response: Response, message?: string): void {
+    BaseController.errorRequest(response, 409, message ?? "Conflict");
   }
 
   protected fail(response: Response): void {
-    BaseController.errorRequest(response, 500, 'Internal Server Error');
+    BaseController.errorRequest(response, 500, "Internal Server Error");
   }
 }
 

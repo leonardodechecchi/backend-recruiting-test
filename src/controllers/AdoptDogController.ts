@@ -1,44 +1,48 @@
-import { Request, Response } from 'express';
-import { BaseController } from './BaseController';
-import { IDogRepository } from '../repositories/DogRepository';
-import { ObjectId } from 'mongodb';
-import { ICacheService } from '../utils/CacheService';
+import { Request, Response } from "express";
+import { BaseController } from "./BaseController";
+import { ObjectId } from "mongodb";
+import Dog from "../models/Dog";
 
 /**
  * Controller che gestisce l'adozione di un cane presente nel canile.
  *
- * @param dogRepository Il repository dei cani.
  * @param cacheService Il servizio che gestisce la cache.
  */
 class AdoptDogController extends BaseController {
-  private readonly dogRepository: IDogRepository;
-  private readonly cacheService: ICacheService;
 
-  constructor(dogRepository: IDogRepository, cacheService: ICacheService) {
+  constructor() {
     super();
-
-    this.dogRepository = dogRepository;
-    this.cacheService = cacheService;
   }
 
-  protected async executeImpl(request: Request, response: Response): Promise<void> {
+  protected async executeImpl(
+    request: Request,
+    response: Response
+  ): Promise<void> {
+    const { user } = request;
     const dogId = new ObjectId(request.params.id);
-    const dog = await this.dogRepository.getById(dogId);
 
+    // check if the dog exists
+    const dog = await Dog.findOne({ _id: dogId });
     if (!dog) {
-      return this.notFound(response);
+      return this.notFound(response, "Dog not found");
     }
 
-    if (dog.status === 'adopted') {
-      return this.unauthorized(response, 'The dog has already been adopted');
+    // check if the dog has already been adopted
+    if (dog.status === "adopted") {
+      return this.unauthorized(response, "The dog has already been adopted");
     }
 
-    await this.dogRepository.updateOne(dogId, {
-      status: 'adopted',
-      adoptionDate: new Date(),
-    });
+    // update the user's dogs list
+    user.dogIds.push(dog._id);
+    await user.save();
 
-    this.cacheService.purge();
+    // update the dog record
+    await Dog.updateOne(
+      { _id: dogId },
+      { status: "adopted", adoptionDate: new Date() }
+    );
+
+    await this.cacheService.purge();
 
     return this.ok(response);
   }

@@ -2,8 +2,6 @@ import { env } from './Env';
 import { connection, connect, disconnect } from 'mongoose';
 
 class MongoDb {
-  constructor() {}
-
   public async connect(): Promise<void> {
     connection.on('connected', () => {
       console.log('Connected to MongoDB');

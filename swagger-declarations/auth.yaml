@@ -1,0 +1,74 @@
+openapi: 3.0.0
+info:
+  title: auth
+  version: 1.0.0
+tags:
+  - name: Auth
+components:
+  schemas:
+    Registration:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      title: Registration
+  parameters: {}
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      operationId: login
+      summary: Effettua il login
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: index.yaml#/components/schemas/User
+                title: ResponseLogin
+          description: OutputLogin
+        "401":
+          content:
+            application/json:
+              schema:
+                title: ResponseLogin
+          description: OutputLogin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: index.yaml#/components/schemas/Registration
+              title: InputLogin
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      operationId: register
+      summary: Effettua la registrazione di un utente
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: index.yaml#/components/schemas/User
+                title: ResponseRegister
+          description: OutputRegister
+        "409":
+          content:
+            application/json:
+              schema:
+                title: ResponseRegister
+          description: OutputRegister
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: index.yaml#/components/schemas/Registration
+              title: InputRegister

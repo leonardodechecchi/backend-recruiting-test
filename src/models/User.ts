@@ -1,16 +1,44 @@
-import { Schema, Types, model } from 'mongoose';
+import mongoose, { Document, Model, Types } from "mongoose";
+import { IDog } from "./Dog";
 
-type User = {
+const Schema = mongoose.Schema;
+
+export const UserSchema = new Schema(
+  {
+    email: {
+      required: true,
+      unique: true,
+      type: String,
+    },
+    password: {
+      required: true,
+      type: String,
+    },
+    dogIds: {
+      type: [Types.ObjectId],
+      ref: "Dog",
+    },
+  },
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
+
+export interface IUser extends Document {
+  _id: Types.ObjectId;
+  id: string;
   email: string;
   password: string;
-  _id?: Types.ObjectId;
-};
+  dogIds: Types.ObjectId[];
+  updatedAt: Date | number;
+  createdAt: Date | number;
+  isOwner: (dog: IDog) => boolean;
+}
 
-const userSchema = new Schema<User>({
-  email: { type: String, required: true },
-  password: { type: String, required: true },
-});
+const User =
+  (mongoose.models.User as Model<IUser>) ||
+  mongoose.model<IUser>("User", UserSchema);
 
-const UserModel = model<User>('users', userSchema);
-
-export { User, UserModel };
+export default User;

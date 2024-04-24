@@ -1,40 +1,38 @@
-import { Request, Response } from 'express';
-import { BaseController } from './BaseController';
-import { IDogRepository } from '../repositories/DogRepository';
-import { Dog } from '../models/Dog';
-import { ICacheService } from '../utils/CacheService';
+import { Request, Response } from "express";
+import { BaseController } from "./BaseController";
+import { ICacheService } from "../utils/CacheService";
+import Dog, { IDog } from "../models/Dog";
 
 /**
  * Controller che gestisce la richiesta di ottenere la lista di tutti i cani presenti nel canile.
  * Prima di recuperare i dati dal repository vengono cercati i dati nella cache.
  *
- * @param dogRepository Il repository dei cani.
  * @param cacheService Il servizio che gestisce la cache.
  */
 class GetAllDogsController extends BaseController {
-  private readonly dogRepository: IDogRepository;
   private readonly cacheService: ICacheService;
 
-  constructor(dogRepository: IDogRepository, cacheService: ICacheService) {
+  constructor(cacheService: ICacheService) {
     super();
-
-    this.dogRepository = dogRepository;
     this.cacheService = cacheService;
   }
 
-  protected async executeImpl(request: Request, response: Response): Promise<void> {
+  protected async executeImpl(
+    request: Request,
+    response: Response
+  ): Promise<void> {
     const key = request.originalUrl;
-    const cachedData = this.cacheService.get<Dog[]>(key);
+    const cachedData = await this.cacheService.get(key);
 
     if (cachedData) {
-      return this.ok(response, cachedData);
+      return this.ok(response, JSON.parse(cachedData));
     }
 
-    const dogs = await this.dogRepository.getAll();
+    const dogs = await Dog.find();
 
-    this.cacheService.set<Dog[]>(key, dogs);
+    await this.cacheService.set(key, JSON.stringify(dogs));
 
-    this.ok<Dog[]>(response, dogs);
+    return this.ok<IDog[]>(response, dogs);
   }
 }
 
